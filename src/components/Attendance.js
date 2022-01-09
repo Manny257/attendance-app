@@ -1,7 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export default function Attendance() {
+  const [State, setState] = useState("");
+  const expected = 7 * 60; // 7 hours of work (in mins)
   const {
     register,
     handleSubmit,
@@ -10,8 +13,15 @@ export default function Attendance() {
   } = useForm({ mode: "onTouched" });
 
   const onSubmit = (data) => {
-    console.log("attendance");
-    console.log(data);
+    const ArrivingTime = data.arrival.split(":");
+    const ExitingTime = data.exiting.split(":");
+    const difference =
+      (ExitingTime[0] - ArrivingTime[0]) * 60 +
+      Math.abs(ExitingTime[1] - ArrivingTime[1]);
+    if (expected > difference - data.break) setState("below");
+    else setState("above");
+
+    console.log((difference - data.break) / 60);
     reset();
   };
 
@@ -60,9 +70,13 @@ export default function Attendance() {
             <small className="text-danger">{errors.exiting.message}</small>
           )}
         </div>
-        <button type="submit" className="btn btn-warning">
-          Submit
-        </button>
+        {State ? (
+          <h5>Your worked hours are {State} the expected working hours </h5>
+        ) : (
+          <button type="submit" className="btn btn-warning">
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );
