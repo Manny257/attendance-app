@@ -18,6 +18,7 @@ export default function Attendance() {
     const difference =
       (ExitingTime[0] - ArrivingTime[0]) * 60 +
       Math.abs(ExitingTime[1] - ArrivingTime[1]);
+
     if (expected > difference - data.break) setState("below");
     else setState("above");
 
@@ -33,7 +34,9 @@ export default function Attendance() {
             Arrival Time
           </label>
           <input
-            {...register("arrival")}
+            {...register("arrival", {
+              required: "please enter your arrival time",
+            })}
             type="time"
             className="form-control"
             id="arrival"
@@ -47,7 +50,9 @@ export default function Attendance() {
             Exiting Time
           </label>
           <input
-            {...register("exiting")}
+            {...register("exiting", {
+              required: "please enter your exiting time time",
+            })}
             type="time"
             className="form-control"
             id="exiting"
@@ -61,13 +66,16 @@ export default function Attendance() {
             Lunch Break
           </label>
           <input
-            {...register("break")}
+            {...register("break", {
+              required: "please enter your lunch break time",
+            })}
             type="number"
+            placeholder="in minuts"
             className="form-control"
             id="break"
           />
           {errors.exiting && (
-            <small className="text-danger">{errors.exiting.message}</small>
+            <small className="text-danger">{errors.break.message}</small>
           )}
         </div>
         {State ? (
